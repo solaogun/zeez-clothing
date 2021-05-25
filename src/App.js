@@ -15,6 +15,7 @@ import { setCurrentUser } from './redux/user/user.actions'
 import { selectCurrentUser } from './redux/user/user.selector'
 
 
+
 class App extends React.Component {
 
   // no need again our setCurrentUser i.e action will take care of it
@@ -45,6 +46,7 @@ class App extends React.Component {
 
       }
       setCurrentUser(userAuth)
+      //addCollectionAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })))
       // createUserProfileDocument(user)will pass this to onAuthStateChanged bcos we needed our state data too
       // instead of this state use the createUserProfileD below
       // this.setState({ currentUser: user })
@@ -75,7 +77,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+
 })
 
 const mapDispatchToProps = dispatch => ({
