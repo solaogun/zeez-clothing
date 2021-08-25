@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
@@ -18,7 +18,12 @@ import { checkUserSession } from './redux/user/user.actions'
 
 
 
-class App extends React.Component {
+const App = ({ checkUserSession, currentUser }) => {
+
+  useEffect(() => {
+    checkUserSession()
+  }, [checkUserSession])
+
 
   // no need again our setCurrentUser i.e action will take care of it
   // constructor() {
@@ -28,58 +33,61 @@ class App extends React.Component {
   //   }
   // }
 
-  unsubscribeFromAuth = null
+  // unsubscribeFromAuth = null
 
-  componentDidMount() {
-    const { checkUserSession } = this.props
-    checkUserSession()
-    // no need aggain bcos of googlesignin and onEmailSignInStart
-    // const { setCurrentUser } = this.props 
+  // componentDidMount() {
+  //   const { checkUserSession } = this.props
+  //   checkUserSession() no need of componentDidMount again useEffect will take care of it
+  // no need aggain bcos of googlesignin and onEmailSignInStart
+  // const { setCurrentUser } = this.props 
 
-    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-    //   if (userAuth) {
-    //     const userRef = await createUserProfileDocument(userAuth)
-    //     console.log(userRef)
-    //     userRef.onSnapshot(snapShot => {
-    //       setCurrentUser({
-    //         id: snapShot.id,
-    //         ...snapShot.data()
+  // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+  //   if (userAuth) {
+  //     const userRef = await createUserProfileDocument(userAuth)
+  //     console.log(userRef)
+  //     userRef.onSnapshot(snapShot => {
+  //       setCurrentUser({
+  //         id: snapShot.id,
+  //         ...snapShot.data()
 
-    //       }, () => { console.log(this.state) })
+  //       }, () => { console.log(this.state) })
 
-    //     })
+  //     })
 
-    //   }
-    //   setCurrentUser(userAuth) comment out bcos of saga
-    //addCollectionAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })))
-    // createUserProfileDocument(user)will pass this to onAuthStateChanged bcos we needed our state data too
-    // instead of this state use the createUserProfileD below
-    // this.setState({ currentUser: user })
-    // console.log(user)
+  // }
+  //   setCurrentUser(userAuth) comment out bcos of saga
+  //addCollectionAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })))
+  // createUserProfileDocument(user)will pass this to onAuthStateChanged bcos we needed our state data too
+  // instead of this state use the createUserProfileD below
+  // this.setState({ currentUser: user })
+  // console.log(user)
 
-    //   })
-  }
+  //   })
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth()
-  }
-  render() {
-    return (
-      <div >
-        <Header
-        // currentUser={this.state.currentUser} we are passing current user from our user reducer now instead of appjs
-        />
-        <Switch>
-          <Route exact path='/' component={HomePage} />
-          <Route path='/shop' component={ShopPage} />
-          <Route path='/checkout' component={CheckoutPage} />
-          <Route exact path='/signin' render={() => this.props.currentUser ? (<Redirect to='/' />) : (<SignInAndSignUpPage />)} />
-        </Switch>
-      </div>
-    );
-  }
+
+  // componentWillUnmount() {
+  //   this.unsubscribeFromAuth()
+  // }
+
+
+
+
+  return (
+    <div >
+      <Header
+      // currentUser={this.state.currentUser} we are passing current user from our user reducer now instead of appjs
+      />
+      <Switch>
+        <Route exact path='/' component={HomePage} />
+        <Route path='/shop' component={ShopPage} />
+        <Route path='/checkout' component={CheckoutPage} />
+        <Route exact path='/signin' render={() => currentUser ? (<Redirect to='/' />) : (<SignInAndSignUpPage />)} />
+      </Switch>
+    </div>
+  );
 
 }
+
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
@@ -91,8 +99,11 @@ const mapDispatchToProps = dispatch => ({
 
 })
 
+
 // const mapDispatchToProps = dispatch => ({
 //   setCurrentUser: user => dispatch(setCurrentUser(user))
 // }) no need again bcos of emailsignin and googlesignin
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+

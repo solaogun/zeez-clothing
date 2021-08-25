@@ -7,20 +7,21 @@ import { auth, signInWithGoogle } from '../../firebase/firebase.utils'
 import { googleSignInStart, emailSignInStart } from '../../redux/user/user.actions'
 import './sign-in.style.scss'
 
-class SignIn extends React.Component {
-    // const [userCredentials, setCredentials] =  useState({email: '', password: ''})
-    constructor(props) {
-        super(props)
-        this.state = {
-            email: '',
-            password: ''
-        }
-    }
-
-    handleSubmit = async event => {
+const SignIn = ({ emailSignInStart, googleSignInStart }) => {
+    const [userCredentials, setCredentials] = useState({ email: '', password: '' })
+    // constructor(props) {
+    //     super(props)
+    //     this.state = {
+    //         email: '',
+    //         password: ''
+    //     }
+    // } bcos we are using useState now
+    const { email, password } = userCredentials
+    const handleSubmit = async event => {
         event.preventDefault()
-        const { emailSignInStart } = this.props
-        const { email, password } = this.state
+        // const { emailSignInStart } = this.props destructure in signinbcos of useState
+        // const { email, password } = this.state boc we are usin useState
+
 
         emailSignInStart(email, password)
         // this.setState(email, password)
@@ -34,49 +35,51 @@ class SignIn extends React.Component {
 
     }
 
-    handleChange = event => {
+    const handleChange = event => {
         const { value, name } = event.target
-        this.setState({ [name]: value })
+        // this.setState({ [name]: value })
+        setCredentials({ ...userCredentials, [name]: value })
 
 
 
     }
-    render() {
-        const { googleSignInStart } = this.props
-        return (
-            <div className='sign-in'>
-                <h2>I already have an account</h2>
-                <span>Sign in with your email and password</span>
+    // render() { using function component now
+    // const { googleSignInStart } = this.props we are usin useState now
+    return (
+        <div className='sign-in'>
+            <h2>I already have an account</h2>
+            <span>Sign in with your email and password</span>
 
-                <form onSubmit={this.handleSubmit}>
-                    <FormInput
-                        name="email"
-                        type="email"
-                        handleChange={this.handleChange}
-                        value={this.state.email}
-                        label="email"
-                        required />
+            <form onSubmit={handleSubmit}>
+                <FormInput
+                    name="email"
+                    type="email"
+                    handleChange={handleChange}
+                    // value={this.state.email}no need for this.state again bcos of useState
+                    value={email}
+                    label="email"
+                    required />
 
 
-                    <FormInput
-                        name="password"
-                        type="password"
-                        handleChange={this.handleChange}
-                        value={this.state.password}
-                        label="password"
-                        required />
+                <FormInput
+                    name="password"
+                    type="password"
+                    handleChange={handleChange}
+                    value={password}
+                    label="password"
+                    required />
 
-                    <div className='buttons'>
-                        <CustomButton type="submit" > SIGN IN</CustomButton>
-                        <CustomButton type='button' onClick={googleSignInStart} isGoogleSignIn> SIGN IN WITH GOOGLE</CustomButton>
-                    </div>
+                <div className='buttons'>
+                    <CustomButton type="submit" > SIGN IN</CustomButton>
+                    <CustomButton type='button' onClick={googleSignInStart} isGoogleSignIn> SIGN IN WITH GOOGLE</CustomButton>
+                </div>
 
-                </form>
-            </div>
-        )
-    }
-
+            </form>
+        </div>
+    )
 }
+
+
 
 const mapDispatchToProps = dispatch => ({
     googleSignInStart: () => dispatch(googleSignInStart()),
