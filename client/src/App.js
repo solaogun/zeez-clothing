@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Switch, Route, Redirect } from 'react-router-dom'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { createStructuredSelector } from 'reselect'
 
 import './App.css';
@@ -18,11 +18,17 @@ import { checkUserSession } from './redux/user/user.actions'
 
 
 
-const App = ({ checkUserSession, currentUser }) => {
+const App = () => {
+  const currentUser = useSelector(selectCurrentUser)
+  const dispatch = useDispatch()
+
+  // const currentUser = useSelector((state)=>{
+  //  console.log(state)
+  // })
 
   useEffect(() => {
-    checkUserSession()
-  }, [checkUserSession])
+    dispatch(checkUserSession())
+  }, [dispatch])
 
 
   // no need again our setCurrentUser i.e action will take care of it
@@ -104,6 +110,7 @@ const mapDispatchToProps = dispatch => ({
 //   setCurrentUser: user => dispatch(setCurrentUser(user))
 // }) no need again bcos of emailsignin and googlesignin
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+// export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
 
 
